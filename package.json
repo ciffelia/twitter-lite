@@ -29,7 +29,8 @@
   ],
   "dependencies": {
     "cross-fetch": "^3.0.0",
-    "oauth-1.0a": "^2.2.4"
+    "oauth-1.0a": "^2.2.4",
+    "timeout-signal": "^1.1.0"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",

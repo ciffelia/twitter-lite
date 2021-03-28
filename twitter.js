@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const OAuth = require('oauth-1.0a');
 const Fetch = require('cross-fetch');
+const timeoutSignal = require('timeout-signal');
 const querystring = require('querystring');
 const Stream = require('./stream');
 
@@ -229,17 +230,20 @@ class Twitter {
    * Send a GET request
    * @param {string} resource - endpoint, e.g. `followers/ids`
    * @param {object} [parameters] - optional parameters
+   * @param {number} [timeout] - optional request timeout in milliseconds
    * @returns {Promise<object>} Promise resolving to the response from the Twitter API.
    *   The `_header` property will be set to the Response headers (useful for checking rate limits)
    */
-  get(resource, parameters) {
+  get(resource, parameters, timeout) {
+    const signal = timeout != null ? timeoutSignal(timeout) : undefined;
+
     const { requestData, headers } = this._makeRequest(
       'GET',
       resource,
       parameters,
     );
 
-    return Fetch(requestData.url, { headers })
+    return Fetch(requestData.url, { headers, signal })
       .then(Twitter._handleResponse);
   }
 
@@ -248,10 +252,13 @@ class Twitter {
    * @param {string} resource - endpoint, e.g. `users/lookup`
    * @param {object} body - POST parameters object.
    *   Will be encoded appropriately (JSON or urlencoded) based on the resource
+   * @param {number} [timeout] - optional request timeout in milliseconds
    * @returns {Promise<object>} Promise resolving to the response from the Twitter API.
    *   The `_header` property will be set to the Response headers (useful for checking rate limits)
    */
-  post(resource, body) {
+  post(resource, body, timeout) {
+    const signal = timeout != null ? timeoutSignal(timeout) : undefined;
+
     const { requestData, headers } = this._makeRequest(
       'POST',
       resource,
@@ -270,6 +277,7 @@ class Twitter {
       method: 'POST',
       headers: postHeaders,
       body,
+      signal,
     })
       .then(Twitter._handleResponse);
   }
@@ -278,10 +286,13 @@ class Twitter {
    * Send a PUT request 
    * @param {string} resource - endpoint e.g. `direct_messages/welcome_messages/update`
    * @param {object} parameters - required or optional query parameters
-   * @param {object} body - PUT request body 
+   * @param {object} body - PUT request body
+   * @param {number} [timeout] - optional request timeout in milliseconds
    * @returns {Promise<object>} Promise resolving to the response from the Twitter API.
    */
-  put(resource, parameters, body) {
+  put(resource, parameters, body, timeout) {
+    const signal = timeout != null ? timeoutSignal(timeout) : undefined;
+
     const { requestData, headers } = this._makeRequest(
       'PUT',
       resource,
@@ -295,6 +306,7 @@ class Twitter {
       method: 'PUT',
       headers: putHeaders,
       body,
+      signal,
     })
       .then(Twitter._handleResponse);
   }

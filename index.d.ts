@@ -73,10 +73,11 @@ export default class Twitter {
    * @type {T = any} Expected type for the response from this request, generally `object` or `array`.
    * @param {string} resource - endpoint, e.g. `followers/ids`
    * @param {object} [parameters] - optional parameters
+   * @param {number} [timeout] - optional request timeout in milliseconds
    * @returns {Promise<T>} Promise resolving to the response from the Twitter API.
    *   The `_header` property will be set to the Response headers (useful for checking rate limits)
    */
-  public get<T = any>(resource: string, parameters?: object): Promise<T>;
+  public get<T = any>(resource: string, parameters?: object, timeout?: number): Promise<T>;
 
   /**
    * Send a POST request
@@ -84,10 +85,11 @@ export default class Twitter {
    * @param {string} resource - endpoint, e.g. `users/lookup`
    * @param {object} body - POST parameters object.
    *   Will be encoded appropriately (JSON or urlencoded) based on the resource
+   * @param {number} [timeout] - optional request timeout in milliseconds
    * @returns {Promise<any>} Promise resolving to the response from the Twitter API.
    *   The `_header` property will be set to the Response headers (useful for checking rate limits)
    */
-  public post<T = any>(resource: string, body: object): Promise<T>;
+  public post<T = any>(resource: string, body: object, timeout?: number): Promise<T>;
 
   /**
    * Send a PUT request
@@ -95,12 +97,14 @@ export default class Twitter {
    * @param {string} resource - endpoint e.g. `direct_messages/welcome_messages/update`
    * @param {object} parameters - required or optional query parameters
    * @param {object} body - PUT request body
+   * @param {number} [timeout] - optional request timeout in milliseconds
    * @returns {Promise<any>} Promise resolving to the response from the Twitter API.
    */
   public put<T = any>(
     resource: string,
     parameters: object,
-    body: object
+    body: object,
+    timeout?: number
   ): Promise<T>;
 
   /**
